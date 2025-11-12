@@ -1,0 +1,92 @@
+#!/bin/bash
+
+
+
+#Update the system.
+#Install Python3, venv, pip, and git if needed.
+#Clone your repository from GitHub.
+#Create and activate a virtual environment.
+#Install dependencies.
+#Set up systemd to auto-start the Flask app on boot.
+#Save this as setup_library_app.sh on your Pi and run it with bash setup_library_app.sh.
+
+
+
+
+# ===============================
+# Raspberry Pi Library App Setup
+# ===============================
+
+# 1️⃣ Update system
+echo "Updating system..."
+sudo apt update && sudo apt upgrade -y
+
+# 2️⃣ Install Python3, venv, pip, git
+echo "Installing Python3, venv, pip, git..."
+sudo apt install python3 python3-venv python3-pip git -y
+
+# 3️⃣ Go to home directory
+cd ~ || exit
+
+# 4️⃣ Get repository info
+read -p "Enter GitHub repository URL: " REPO_URL
+read -p "Enter branch name (default: main): " BRANCH_NAME
+BRANCH_NAME=${BRANCH_NAME:-main}
+
+# 5️⃣ Clone the repo
+REPO_NAME=$(basename "$REPO_URL" .git)
+
+if [ -d "$REPO_NAME" ]; then
+    echo "Repository folder already exists. Removing it first..."
+    rm -rf "$REPO_NAME"
+fi
+
+git clone -b "$BRANCH_NAME" "$REPO_URL" || { echo "Git clone failed"; exit 1; }
+
+cd "$REPO_NAME" || exit
+
+# 6️⃣ Create virtual environment
+echo "Creating virtual environment..."
+python3 -m venv venv
+source venv/bin/activate
+
+# 7️⃣ Upgrade pip
+pip install --upgrade pip
+
+# 8️⃣ Install dependencies
+if [ -f requirements.txt ]; then
+    echo "Installing dependencies from requirements.txt..."
+    pip install -r requirements.txt
+else
+    echo "Installing Flask, Pillow, qrcode, schedule..."
+    pip install flask pillow qrcode schedule
+fi
+
+# 9️⃣ Set up systemd service
+SERVICE_FILE="/etc/systemd/system/library_app.service"
+echo "Setting up systemd service at $SERVICE_FILE..."
+sudo tee $SERVICE_FILE > /dev/null <<EOL
+[Unit]
+Description=Library Flask App
+After=network.target
+
+[Service]
+User=pi
+WorkingDirectory=/home/pi/$REPO_NAME
+Environment="PATH=/home/pi/$REPO_NAME/venv/bin"
+ExecStart=/home/pi/$REPO_NAME/venv/bin/python /home/pi/$REPO_NAME/library_app.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+EOL
+
+sudo systemctl daemon-reload
+sudo systemctl enable library_app.service
+sudo systemctl start library_app.service
+
+echo
+echo "✅ Setup complete!"
+echo "Flask app should be running and will start automatically on boot."
+echo "Check status with: sudo systemctl status library_app.service"
