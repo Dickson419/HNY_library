@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HNY Library Scanner</title>
+
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+<!--    <script src="script.js" defer></script>-->
+<!--    <link rel="stylesheet" href="style.css">-->
+
+
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+    <link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}">
+</head>
+<body>
+    <h1>HNY Book Check In/Out</h1>
+
+    <div class="QR-scan">
+        <div id="reader"></div>
+        <div id="log"></div>
+        <!-- <button onclick="startScanner()">Start Scanner</button> -->
+
+    </div>
+
+    <div class="check-in-out-form">
+        <form id="add-book" action="/submit" method="post">
+            <label for="Student">Student</label>
+            <input type="text" id="Student" name="Student" required>
+
+            <label for="Book-title">Book Title</label>
+            <input type="text" id="Book-title" name="Book-title" required>
+
+            <label for="Book-author">Author</label>
+            <input type="text" id="Book-author" name="Book-author" required>
+
+            <div class="text-boxes">
+                <label for="Take-out">Take out</label>
+                <input type="checkbox" id="Take-out" name="Take-out" onclick="checkboxChange(this)">
+
+                <label for="Return">Return</label>
+                <input type="checkbox" id="Return" name="Return" onclick="checkboxChange(this)">
+            </div>
+
+            <button class="submit-btn" type="submit">Submit</button>
+
+        </form>
+
+    </div>
+
+    <div class="display-library">
+            <h1>Book Status</h1>
+            <table>
+                <!-- headings for the table -->
+                <tr>
+                    <th>DTG</th>
+                    <th>Student</th>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Status</th>
+                </tr>
+                <tbody>
+                    {% for book in books %}  <!-- template loop for flask -->
+                    <tr>  <!-- a row for each book from the array -->
+                        <td> {{ book.dtg}} </td>
+                        <td> {{ book.student}} </td>
+                        <td> {{ book.title}} </td>
+                        <td> {{ book.author}} </td>
+                        <td> {{ book.status}} </td>
+                    </tr>
+                    {% endfor %} <!-- ends the loop -->
+                </tbody>
+            </table>
+
+
+        </div>
+
+
+</body>
+</html>

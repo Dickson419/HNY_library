@@ -1,0 +1,167 @@
+ body {
+    font-family: "Gill Sans MT", "Gill Sans", sans-serif ;
+    text-align: center;
+    background: linear-gradient(140deg, #073488 40%, #dcae31 50%);
+    padding: 20px;
+    color:#fff;
+
+}
+
+h1{
+    text-align: center;
+    color: white;
+    margin-bottom: 30px;
+    font-size: 2.5em;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+
+}
+
+div{
+    padding: 5px;
+    margin: 5px;
+}
+
+button{
+    padding: 5px;
+    border: none;
+    border-radius: 8px;
+    background: rgb(201, 237, 208);
+    color: white;
+    font-size: 16pt;
+    transition: all 0.3s ease;
+}
+
+button:hover{
+    background: rgb(96, 244, 85);
+    transform: scale(1.05);
+}
+
+/* .display-library{
+    width: 100%;
+    text-align: center;
+    border-collapse: collapse;
+    background-color: rgba(255,255,255,0.5);
+
+} */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    border-radius: 15px;
+    background-color: rgba(255, 255, 255, 0.5); /* white but 50% transparent */
+    color: #000; /* text color */
+    margin-top: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+th,td{
+    padding:10px;
+    text-align: center;
+}
+
+th{
+    background-color: rgba(40,40,255, 0.8);
+    color: #ffff;
+    font-size: 16pt;
+}
+
+tr:nth-child(even) {
+    background-color: rgba(255, 205, 96, 0.8);
+}
+
+
+.check-in-out-form form {
+    border-collapse: collapse;
+    border-radius: 12px;
+    background-color: rgba(255, 255, 255, 0.5);
+    /* background: rgb(255, 255, 255); */
+    display: flex;           /* make form a flex container */
+    flex-direction: column;  /* stack children vertically */
+    align-items: center;     /* center them horizontally */
+    gap: 15px;               /* space between each field */
+    padding: 5px;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.4); /*horizontal, vertical, blur, colour of shadow with opacity */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.check-in-out-form form:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+
+.check-in-out-form label,
+.check-in-out-form input,
+.check-in-out-form button {
+    width: 200px;      /* makes all elements the same width */
+    text-align: center;
+    font-size: 16pt;
+    color: rgb(0, 0, 0);
+    border: none;
+}
+
+
+
+
+.text-boxes{
+    display: flex;
+    justify-content: flex-start;
+    gap: 20px;
+    width: 15%;
+}
+
+/* .check-in-out-form{
+    display:flex;
+    justify-content: start;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+} */
+
+.submit-btn{
+    padding: 5px;
+    margin:10px;
+    color: white;
+
+}
+
+.QR-scan {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; /* centers horizontally */
+    margin-top: 20px;
+}
+
+
+#reader {
+    width: 370px;
+    margin: 20px;
+    transition: all 0.3s ease;
+    background: rgba(186, 45, 45, 0.1);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+
+    background: transparent;
+    box-shadow: none;
+    border: none;
+
+    overflow: hidden;
+
+}
+
+
+/* Remove the internal white box and border drawn by the library */
+#reader video {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+
+
+#log {
+    margin-top: 20px;
+}

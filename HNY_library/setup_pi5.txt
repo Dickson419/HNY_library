@@ -1,0 +1,56 @@
+#!/bin/bash
+
+# ===============================
+# Flask Project Setup Script
+# ===============================
+
+# 1️⃣ Update system
+echo "Updating system..."
+sudo apt update && sudo apt upgrade -y
+
+# 2️⃣ Install Python3, venv, and pip
+echo "Installing Python3, venv, and pip..."
+sudo apt install python3 python3-venv python3-pip git -y
+
+# 3️⃣ Navigate to home directory
+cd ~ || exit
+
+# 4️⃣ Clone your GitHub repository (replace with your repo info)
+read -p "Enter GitHub repository URL: " https://github.com/Dickson419/HNY-Library-System.git
+read -p "Enter branch name (default: main): " main
+BRANCH_NAME=${BRANCH_NAME:-main}
+
+git clone -b "$BRANCH_NAME" "$REPO_URL" || { echo "Git clone failed"; exit 1; }
+
+# Extract repo folder name from URL
+REPO_NAME=$(basename "$REPO_URL" .git)
+cd "$REPO_NAME" || exit
+
+# 5️⃣ Create and activate virtual environment
+echo "Creating virtual environment..."
+python3 -m venv venv
+source venv/bin/activate
+
+# 6️⃣ Upgrade pip
+pip install --upgrade pip
+
+# 7️⃣ Install dependencies
+if [ -f requirements.txt ]; then
+    echo "Installing dependencies from requirements.txt..."
+    pip install -r requirements.txt
+else
+    echo "Installing Flask..."
+    pip install flask
+fi
+
+# 8️⃣ Instructions to run the app
+echo
+echo "Setup complete!"
+echo "Activate your virtual environment with:"
+echo "  source ~/$(basename "$REPO_URL" .git)/venv/bin/activate"
+echo "Then run your Flask app:"
+echo "  export FLASK_APP=library_app.py"
+echo "  export FLASK_ENV=development"
+echo "  flask run --host=0.0.0.0"
+echo
+echo "Your Flask app will be available at http://<Pi_IP>:5000"
