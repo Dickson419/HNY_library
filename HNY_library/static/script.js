@@ -12,38 +12,47 @@ function checkboxChange(clickedBox){
 
 document.addEventListener("DOMContentLoaded", () => startScanner());
 
-function qrBoxSize(){
-    let minEdgePercentage = 0.7; // 70%
-    let minEdgeSize = Math.min(viewfinderWidth, viewfinderHeight);
-    let qrboxSize = Math.floor(minEdgeSize * minEdgePercentage);
-    return {
-        width: qrboxSize,
-        height: qrboxSize
-    };
-
+function qrBoxSize(viewfinderWidth, viewfinderHeight) {
+  let minEdgePercentage = 0.7; // 70%
+  let minEdgeSize = Math.min(viewfinderWidth, viewfinderHeight);
+  let qrboxSize = Math.floor(minEdgeSize * minEdgePercentage);
+  return {
+    width: qrboxSize,
+    height: qrboxSize
+  };
 }
 
 function startScanner() {
-  const logDiv = document.getElementById('log'); //display messages to the user
-  //setup the qr scanner and display video feed
-  const html5QrCode = new Html5Qrcode("reader"); //will create a new object where the qr reader will appear
+  const logDiv = document.getElementById('log'); // display messages to the user
+  const html5QrCode = new Html5Qrcode("reader"); // create new QR reader area
 
-  //ask the browser for a list of available cameras
-  //.then --> when the cameras are found run the following function...
-  // cameras{} is working as an array {id:label}
   Html5Qrcode.getCameras().then(cameras => {
-    //ensure cameras are working... if true
     if (cameras && cameras.length) {
-        //using the first camera in the list setup with these specs
+      // use the first detected camera (change index for USB if needed)
+      const cameraId = cameras[0].id;
+
       html5QrCode.start(
-        cameras[0].id,
-        { fps: 10, qrbox: qrBoxSize },
+        cameraId,
+        {
+          fps: 10,
+          qrbox: { width: 300, height: 300 }, // ✅ fix: was "qr box"
+          videoConstraints: {
+            width: { ideal: 1280 },
+            height: { ideal: 720 },
+            facingMode: "environment" // good for external USB webcams
+          }
+        },
         qrCodeMessage => {
-            //callback function - when qr detected
-          scanQrCode(qrCodeMessage)
-          //logDiv.textContent = "Scanned: " + qrCodeMessage; //TESTING ONLY
+          // callback function - when QR is detected
+          scanQrCode(qrCodeMessage);
+        },
+        errorMessage => {
+          // optional: called for every scan failure
+          console.warn("QR scan error:", errorMessage);
         }
-      );
+      ).catch(err => {
+        logDiv.textContent = "Failed to start scanner: " + err;
+      });
     } else {
       logDiv.textContent = "No camera found.";
     }

@@ -3,4 +3,3 @@ pillow
 qrcode
 schedule
 
-
